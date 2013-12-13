@@ -1,0 +1,33 @@
+<%
+function isShallow(d) {
+  return d.depth() < 5;
+}
+
+function dir(d) {
+  if (d.depth() <= 1) {
+    d.children(true).forEach(dir);
+  } else if(isShallow(d) && d.children(true)) {
+    %>
+      <ul class="nav nav-list">
+    <%
+    %><li><a href="<%= d.url() %>"><i class="icon-folder-open"></i> <%= d.title() %></a></li><%
+      d.children(true).forEach(dir);
+    %>
+      </ul>
+    <%
+  } else if(d.public()) {
+    file(d);
+  }
+}
+
+function file(f) {
+  %>
+    <li class="clearfix file">
+      <a href="<%= f.url() %>"><i class="icon-<%= (f.dir ? 'folder-close' : 'file') %>"></i> <span><%= f.title() %></span></a>
+    </li>
+  <%
+}
+
+if(data.info) dir(data.info);
+
+%>

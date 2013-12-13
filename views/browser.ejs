@@ -1,0 +1,54 @@
+<%- partial('breadcrumb', {info: data.info, include: data.include}) %>
+
+<div id="browser" class="row">
+  <div id="sidebar" class="span3">
+    <%- partial('explorer', data) %>
+
+    <% if(data.refs && data.refs.length) { %>
+      <h4>Related APIs</h4>
+      <div id="related-apis">
+        <%- partial('api', {refs: data.refs, related: true}) %>
+      </div>
+    <% } %>
+  </div>
+  <div class="span9 sections">
+    <% if(data.info.dir && data.include === 'all') { %>
+      <%
+        var children = data.info.children();
+      %>
+      <% children && children.forEach(function (c) { %>
+        <%- partial('contents', {info: c}) %>
+      <% }) %>
+    <% } else { %>
+      <%- partial('contents', {info: data.info}) %>
+    <% } %>
+    <h3 style="text-align: center;">More</h3>
+
+    <% var examples = data.info.mainParent().examples(); %>
+    <% var hasExamples = examples && examples.length; %>
+    <div class="row-fluid">
+      <div class="<%= hasExamples ? 'span6' : 'span6 offset3' %>">
+        <div class="well">
+          <h4>Other docs in "<%= data.info.parent().title() %>"</h4>
+          <ul>
+            <% data.info.parent().children(true).filter(function(i) { return i !== data.info }).forEach(function (info) { %>
+              <li><a href="<%= info.url() %>"><%= info.title() %></a></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+      <% if(hasExamples) { %> 
+        <div class="span6">
+          <div class="well">
+            <h4>Related Examples</h4>
+            <ul>
+              <% examples.filter(function(i) { return i !== data.info }).forEach(function (info) { %>
+                <li><a href="<%= info.url() %>"><%= info.title() %></a></li>
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>

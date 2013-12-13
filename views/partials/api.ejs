@@ -1,0 +1,60 @@
+<div id="api">
+  <%
+  data.refs.forEach(function (r) {
+    %>
+      <% if(!data.related) { %>
+        <section>
+          <h3><%= r.parent().title() %></h3>
+        <div class="sections">
+      <% } %>
+        <%
+        var children = r.children();
+        children.forEach(function (c) {
+          if(hasApi(c.sections)) {
+            %>
+            <ul class="nav nav-list <%= r.parent().basename() %>">
+              <li class="nav-header"><a href="<%= c.url() %>"><%= c.title() %></a></li>
+            <%
+              c.sections.forEach(renderSections);
+            %>
+            </ul>
+            <%
+          }
+        });
+        
+        %>
+      <% if(!data.related) { %>
+        </div>
+        </section>
+      <% } %>
+    <%
+  });
+  %>
+</div>
+
+<% if(!data.related) { %>
+  <script>
+    $('#api .sections').masonry();
+  </script>
+<% } %>
+
+<%
+function renderSections(sec) {
+  if(sec.api) {
+    %>
+      <li><a href="<%= sec.url() %>"><%= sec.title %></a></li>
+    <%
+  }
+  
+  if(sec.children) sec.children.forEach(renderSections);
+}
+
+function hasApi(sections) {
+  for(var i = 0; i < sections.length; i++) {
+    var sec = sections[i];
+    if(sec.api || (sec.children && sec.children.length && hasApi(sec.children))) {
+      return true;
+    }
+  }
+}
+%>

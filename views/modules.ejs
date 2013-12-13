@@ -1,0 +1,17 @@
+<ul id="breadcrumb" class="unstyled">
+  <li><a href="/">Docs</a><span>/</span></li>
+  <li>Modules</li>
+</ul>
+
+<ul id="modules" class="unstyled">
+<% data.info.children().forEach(function (c) { %>
+  <li>
+    <h4>
+      <a href="<%= c.url() %>">
+        <i class="icon-certificate"></i>
+        <%= c.title() %>
+      </a> - <%= c.meta.description %>
+    </h4>
+  </li>
+<% }); %>
+</ul>
